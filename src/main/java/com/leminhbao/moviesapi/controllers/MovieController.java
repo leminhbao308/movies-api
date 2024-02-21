@@ -3,14 +3,11 @@ package com.leminhbao.moviesapi.controllers;
 import com.leminhbao.moviesapi.collections.Movie;
 import com.leminhbao.moviesapi.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,8 +18,9 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return new ResponseEntity<>(movieService.allMovies(), HttpStatus.OK);
+    public ResponseEntity<Page<Movie>> getAllMovies(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                                    @RequestParam(name = "size", required = false, defaultValue = "5") int size) {
+        return new ResponseEntity<>(movieService.allMovies(page - 1, size), HttpStatus.OK);
     }
 
     @GetMapping("/{imdbId}")
